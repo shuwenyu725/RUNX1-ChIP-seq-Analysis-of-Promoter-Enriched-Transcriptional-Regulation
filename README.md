@@ -34,6 +34,7 @@ Tools & Technologies
 All tools are executed using containerized environments to ensure reproducibility.
 
 Repository Structure
+```
 .
 ├── main.nf               # Main workflow
 ├── nextflow.config       # Execution configuration
@@ -41,12 +42,14 @@ Repository Structure
 ├── refs/                 # Reference genome and annotations
 ├── results/              # Output files (peaks, QC, plots)
 └── README.md
-
+```
 Running the Pipeline
+```
 nextflow run main.nf \
   -profile singularity,local \
   --genome refs/GRCh38.fa \
   --reads "data/*.fastq.gz"
+```
 
 Stub runs were used during development to validate pipeline logic before full execution.
 

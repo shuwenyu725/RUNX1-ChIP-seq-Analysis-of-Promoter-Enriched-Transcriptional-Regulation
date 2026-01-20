@@ -1,32 +1,78 @@
-# Project 3 Nextflow Template
+ChIP-seq Analysis Pipeline – RUNX1 
 
-For this project, remember to keep in a few things:
+Overview<br>
+This repository contains a reproducible ChIP-seq analysis pipeline implemented in Nextflow DSL2 to process transcription factor ChIP-seq data and identify high-confidence binding sites.
+The pipeline was used to reproduce key ChIP-seq findings from a published RUNX1 breast cancer study, including peak calling, replicate concordance assessment, motif enrichment, and integration with external RNA-seq results.
 
-1. Most of the required references and files can be found in your `nextflow.config`
+Biological Context
+RUNX1 is a transcription factor involved in gene regulation and chromatin organization and has context-dependent roles in breast cancer.
+This project focuses on reconstructing RUNX1 binding profiles and evaluating their reproducibility and functional relevance using ChIP-seq data.
 
-2. Make sure you give each process a label to request an appropriate amount of resources
+What This Pipeline Does
+- Performs quality control and preprocessing of raw FASTQ files
+- Aligns reads to the human reference genome
+- Calls transcription factor binding peaks with matched input controls
+- Identifies reproducible peaks across biological replicates
+- Annotates peaks and performs motif enrichment analysis
+- Generates genome-wide signal tracks and correlation plots
+- Integrates ChIP-seq results with published RNA-seq differential expression data
 
-3. Use the singularity containers provided on the website directions for the project
+Workflow Summary
+QC → Trimming → Alignment → Peak Calling → Replicate Filtering → Annotation → Motif Analysis → Integration
 
-4. I have given you valid stub commands that will let you troubleshoot your workflow logic using the `-stub-run` command
-- The stub-run commands assume that the first element in the tuple from the initial channel is named `sample_id` in processes
-- Ensure that the appropriate inputs for certain processes are a tuple with the first element being the name from the initial channel
-- The findPeaks stub will not be the same as `sample_id`. Remember that you will need to run findPeaks using the paired samples
-(IP_rep1 + INPUT_rep1) and (IP_rep2 + INPUT_rep2). You should name the peak outputs using the replicate (i.e. rep1_peaks.txt and rep2_peaks.txt)
-- You may alter the names used in the stub-run if it's easier for you
+Tools & Technologies
+- Workflow: Nextflow (DSL2)
+- Containers: Singularity
+- QC: FastQC, MultiQC
+- Trimming: Trimmomatic
+- Alignment: Bowtie2, SAMtools
+- Peak calling & annotation: HOMER
+- Signal processing: deepTools
+- Utilities: BEDTools
+- Downstream analysis: Enrichr 
 
-The stub runs assume that you have something like below so that it can name the fake files using the sample names - this will ensure
-that your stub runs execute the same number of processes as the full pipeline should.
-```
-input:
-tuple val(sample_id), path(file)
-```
+All tools are executed using containerized environments to ensure reproducibility.
 
-5. Use the subsampled data to start out with - you may need to eventually switch to the full data before your
-pipeline is technically complete as sometimes peak calling may fail if not given enough input reads. 
-- When the pipeline is working, change the `params` value in the original channel to the params encoding the
-location of the full_samplesheet.csv
+Repository Structure
+.
+├── main.nf               # Main workflow
+├── nextflow.config       # Execution configuration
+├── modules/              # Modular DSL2 processes
+├── refs/                 # Reference genome and annotations
+├── results/              # Output files (peaks, QC, plots)
+└── README.md
 
-6. To remove regions using the blacklist, there are optional flags available in the `bedtools intersect` command
+Running the Pipeline
+nextflow run main.nf \
+  -profile singularity,local \
+  --genome refs/GRCh38.fa \
+  --reads "data/*.fastq.gz"
 
-7. Create a single jupyter notebook that contains all of the results / figures and your write-up
+Stub runs were used during development to validate pipeline logic before full execution.
+
+Results Summary<br>
+ChIP-seq data showed high alignment quality and strong replicate concordance
+RUNX1 binding was enriched near transcription start sites
+Motif analysis identified RUNX-family motifs, along with known co-regulatory factors
+Integration with RNA-seq data reproduced key trends reported in the original study, despite differences in genome build and processing parameters
+
+Key Takeaways<br>
+Built a modular, reproducible ChIP-seq pipeline using Nextflow DSL2
+Applied method-aware peak filtering to improve biological interpretability
+Learned to reproduce published results conceptually, not just visually
+Gained experience explaining why results differ while conclusions agree
+Strengthened ability to communicate epigenomic results to non-specialists
+
+Limitations<br>
+Hi-C analyses from the original study were not reproduced
+Genome build (hg38) and processing parameters differ from the publication (hg19)
+RNA-seq integration relied on published DEG tables rather than reprocessing raw data
+
+Course Context<br>
+Developed for BF 528 Boston University, Fall 2025
+
+Author
+Shu-Wen Yu
+M.S. Bioinformatics | Nutrition background
+Interests: epigenomics, reproducible workflows, integrative omics analysis
+

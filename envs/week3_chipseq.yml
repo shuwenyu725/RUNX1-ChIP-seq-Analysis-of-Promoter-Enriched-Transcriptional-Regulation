@@ -1,0 +1,19 @@
+name: week3_chipseq
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10
+  - jupyterlab
+  - ipykernel
+  - matplotlib
+  - seaborn
+  - pandas
+  - numpy
+  - deeptools
+  - homer
+  - bedtools
+  - samtools
+  - biopython
